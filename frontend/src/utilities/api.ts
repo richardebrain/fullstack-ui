@@ -15,14 +15,9 @@ const authHeader = () => {
   };
 };
 const parseResponse = (response: any): APIResponse => {
-  return {
-    data: response?.data,
-    status: response?.status,
-    message: response.statusText,
-  };
+  return response;
 };
 const parseError = (error: Error): APIResponse => {
-  console.log(error);
   return {
     status: false,
     message: error.message,
@@ -35,7 +30,7 @@ const api = {
     return axios
       .get<APIResponse>(`${baseUrl}${url}`, {
         headers: auth ? authHeader() : headers(),
-        validateStatus: (status) => status >= 200 && status <= 500,
+        validateStatus: (status) => status >= 200 && status < 500,
       })
       .then(parseResponse)
       .catch(parseError);
@@ -46,7 +41,7 @@ const api = {
     return axios
       .post<APIResponse>(`${baseUrl}${url}`, body, {
         headers: auth ? authHeader() : headers(),
-        validateStatus: (status) => status >= 200 && status <= 500,
+        validateStatus: (status) => status >= 200 && status < 500,
       })
       .then(parseResponse)
       .catch(parseError);
@@ -58,7 +53,7 @@ const api = {
     return axios
       .put<APIResponse>(`${baseUrl}${url}`, body, {
         headers: auth ? authHeader() : headers(),
-        validateStatus: (status) => status >= 200 && status <= 500,
+        validateStatus: (status) => status >= 200 && status < 500,
       })
       .then(parseResponse)
       .catch(parseError);
@@ -67,7 +62,7 @@ const api = {
     return axios
       .delete<APIResponse>(`${baseUrl}${url}`, {
         headers: auth ? authHeader() : headers(),
-        validateStatus: (status) => status >= 200 && status <= 500,
+        validateStatus: (status) => status >= 200 && status < 500,
       })
       .then(parseResponse)
       .catch(parseError);

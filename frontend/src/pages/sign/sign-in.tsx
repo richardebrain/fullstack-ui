@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 
 type FormData = {
-  username: string
+  email: string
   password: string
 }
 
@@ -15,7 +15,7 @@ const SignIn = () => {
   const onSubmit = async (values: FormData) => {
     try {
 
-      const { data, status, message } = await api.post('/auth/login', values);
+      const {data ,status,message} = await api.post('/auth/login', values);
       console.log(data, 'result')
 
     }
@@ -40,14 +40,14 @@ const SignIn = () => {
 
             <div>
               <CustomInput
-                label='Username'
-                type='username'
-                placeholder='Enter your username'
-                name='username'
+                label='Email'
+                type='email'
+                placeholder='Enter your Email'
+                name='email'
                 required
                 register={register}
-                touched={touchedFields.username}
-                error={errors.username?.message}
+                touched={touchedFields.email}
+                error={errors.email?.message}
               />
             </div>
             <div>
@@ -74,7 +74,7 @@ const SignIn = () => {
             <button type='submit' className='border bg-primary-btn-bg py-2 px-4 rounded-md text-white'>Sign in with Google</button>
           </div>
 
-          <p>Don't have an account ? </p>
+          <p>Don't have an account ? <Link to='/sign-up'>Sign up</Link></p>
         </form>
       </div>
       {/* hero image */}

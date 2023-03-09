@@ -1,29 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './interfaces/user.interface';
-
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CreateUserDto } from 'src/auth/dto/create-user.dto';
+import { User, UserDocument } from './schemas/user.schema';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [
-    {
-      id: '1',
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      id: '2',
-      username: 'chris',
-      password: 'secret',
-    },
-    {
-      id: '3',
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
-  async findAll(): Promise<User[]> {
-    return this.users;
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+
+  async findOne(email: string): Promise<User> {
+    return (await this.userModel.findOne({ email }).exec()) as User;
   }
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
+
+  async createUser(user: User): Promise<User> {
+    const existingUserWIthEmail = await this.userModel.findOne({
+      email: user.email,
+    });
+    if (existingUserWIthEmail) {
+      throw new Error('User already exists');
+    }
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(user.password, salt);
+    const newUser = new this.userModel({
+      name: user.name,
+      password: hashedPassword,
+      email: user.email,
+      createdAt: new Date(),
+    });
+    return newUser.save();
   }
 }
