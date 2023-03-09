@@ -3,7 +3,7 @@
     "builds":[
         {
             "src":"src/main.ts",
-            "use":"vercel/node"
+            "use":"@vercel/node"
         }
     ],
     "routes":[
@@ -11,7 +11,7 @@
 
             "src":"/(.*)",
             "dest":"src/main.ts",
-            "methods":["GET","POST","PUT","PATCH","DELETE","HEAD","OPTIONS"]
+            "methods":["GET","POST","PUT","PATCH","DELETE"]
         }
     ]
 }
